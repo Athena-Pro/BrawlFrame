@@ -18,3 +18,13 @@ View your app in AI Studio: https://ai.studio/apps/drive/1P6ME9t0XOASi_B-PHsu5q3
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Updating dependencies
+
+React, React DOM, Tailwind CSS and the build tooling are pinned to exact versions
+in `package.json` to ensure reproducible builds. When upgrades are needed:
+
+1. Update the version numbers in `package.json`.
+2. Run `npm install` to apply the changes.
+3. Run `npm run build` to verify the app still compiles.
+4. Commit the updated files once tests pass.
