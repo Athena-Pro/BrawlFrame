@@ -6,28 +6,6 @@ import { ALL_MUTATIONS, mut_sidearm } from './game/mutations';
 import { composeAttack } from './game/attacks';
 import { clamp } from './utils';
 
-// --- HELPERS FOR STATE CLONING ---
-
-// Teaches JSON.stringify how to handle Set objects.
-function replacer(key: string, value: any) {
-    if (value instanceof Set) {
-        return {
-            _dataType: 'Set',
-            value: [...value], // Convert Set to array
-        };
-    }
-    return value;
-}
-
-// Teaches JSON.parse how to reconstruct Set objects.
-function reviver(key: string, value: any) {
-    if (typeof value === 'object' && value !== null && value._dataType === 'Set') {
-        return new Set(value.value); // Convert array back to Set
-    }
-    return value;
-}
-
-
 // --- GAME STATE & REDUCER ---
 
 interface GameState {
@@ -55,7 +33,7 @@ const nextId = () => ++entityIdCounter;
 
 // Pure function to add/stack a card in inventory, returns a new inventory object.
 function addCardToInventory(inventory: Inventory, newCard: MutationCard): Inventory {
-    const newInventory = JSON.parse(JSON.stringify(inventory)); // Deep clone
+    const newInventory = structuredClone(inventory);
     let cardFound = false;
 
     for (const socket of ['socketA', 'socketB', 'backpack'] as const) {
@@ -218,7 +196,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
             return { ...state, isLevelUpScreenActive: true, levelUpChoices: action.payload.choices };
         case 'LEVEL_UP_SELECT': {
             const { choice } = action.payload;
-            const newState = JSON.parse(JSON.stringify(state, replacer), reviver) as GameState;
+            const newState = structuredClone(state) as GameState;
             const { player } = newState;
             
             if (choice.type === 'NEW_MUTATION') {
@@ -505,8 +483,8 @@ export default function App() {
         const dt = (now - lastTime.current) / 1000;
         lastTime.current = now;
 
-        // Clone state using our custom replacer/reviver to handle Sets correctly.
-        let { player, enemies, projectiles, pickups, attackInstances, inventory, wave, boss } = JSON.parse(JSON.stringify(state, replacer), reviver) as GameState;
+        // Clone state so special objects like Sets remain intact.
+        let { player, enemies, projectiles, pickups, attackInstances, inventory, wave, boss } = structuredClone(state) as GameState;
 
         if (player.attackState && now - player.attackState.startedAt > (player.attackState.spec.active + player.attackState.spec.recovery) * 1000) {
             player.attackState = null;
