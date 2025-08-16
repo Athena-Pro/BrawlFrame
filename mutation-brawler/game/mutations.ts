@@ -3,8 +3,28 @@ import type { MutationCard, AttackSpec, Shape, Stats } from '../types';
 import { TINT_CLASSES } from '../constants';
 import { scaleLinear, softArea, clamp } from '../utils';
 
-// A deep copy utility for specs to avoid mutation
-const cloneSpec = <T,>(spec: T): T => JSON.parse(JSON.stringify(spec));
+// A deep copy utility for specs to avoid mutation. Using structuredClone preserves
+// complex data types like Sets or Maps that JSON serialization would drop. A
+// runtime assertion checks that these types survive cloning.
+const cloneSpec = <T,>(spec: T): T => {
+    const cloned = structuredClone(spec);
+    if (typeof spec === 'object' && spec !== null) {
+        for (const [key, value] of Object.entries(spec as Record<string, unknown>)) {
+            const clonedValue = (cloned as Record<string, unknown>)[key];
+            if (value instanceof Set) {
+                console.assert(clonedValue instanceof Set, `cloneSpec: field "${key}" expected to be a Set`);
+            } else if (value instanceof Map) {
+                console.assert(clonedValue instanceof Map, `cloneSpec: field "${key}" expected to be a Map`);
+            } else if (value instanceof Date) {
+                console.assert(
+                    clonedValue instanceof Date && +clonedValue === +value,
+                    `cloneSpec: field "${key}" expected to be a Date`
+                );
+            }
+        }
+    }
+    return cloned;
+};
 
 export const mut_poison = (level: number): MutationCard => {
     const applyToAttack = (a: AttackSpec, L: number): AttackSpec => {
