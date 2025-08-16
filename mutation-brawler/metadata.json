@@ -1,0 +1,5 @@
+{
+  "name": "Mutation Brawler",
+  "description": "A TMNT-inspired alien brawler where mutations reshape your character and attacks. Fight waves of enemies, collect power-ups, and defeat the boss in this fast-paced, side-scrolling beat 'em up built with React and Tailwind CSS.",
+  "requestFramePermissions": []
+}

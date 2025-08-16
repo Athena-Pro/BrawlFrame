@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mutation Brawler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+          "react/": "https://esm.sh/react@^19.1.1/",
+          "react": "https://esm.sh/react@^19.1.1"
+        }
+      }
+    </script>
+    <style>
+      .preserve-3d {
+        transform-style: preserve-3d;
+      }
+      .face {
+        position: absolute;
+        backface-visibility: hidden;
+      }
+      @keyframes spin {
+        from {
+          transform: rotateY(0deg);
+        }
+        to {
+          transform: rotateY(360deg);
+        }
+      }
+      .spinning-brick {
+        animation: spin 3s linear infinite;
+      }
+      @keyframes attack-swipe {
+        50% { transform: rotateZ(-45deg) scale(1.1); }
+        100% { transform: rotateZ(0deg) scale(1); }
+      }
+      .anim-swipe {
+        animation: attack-swipe 0.15s ease-out forwards;
+      }
+       @keyframes attack-lunge {
+        50% { transform: translateX(15px) scale(1.05); }
+        100% { transform: translateX(0px) scale(1); }
+      }
+      .anim-lunge {
+        animation: attack-lunge 0.12s ease-out forwards;
+      }
+    </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-900 text-white">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
