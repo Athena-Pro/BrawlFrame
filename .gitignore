@@ -1,1 +1,5 @@
 mutation-brawler/.env.local
+mutation-brawler/dist/
+mutation-brawler/node_modules/
+mutation-brawler/.env
+mutation-brawler/.env.local
