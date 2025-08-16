@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "builds": [{ "src": "mutation-brawler/package.json", "use": "@vercel/static-build" }],
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "mutation-brawler/dist"
+}
